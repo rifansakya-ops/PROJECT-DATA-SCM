@@ -1,0 +1,29 @@
+name: Bot_SCM_Otomatis
+on:
+  schedule:
+    # Berjalan otomatis setiap 4 jam (Menit ke-23)
+    - cron: '23 */4 * * *' 
+  workflow_dispatch: # Fitur agar bisa klik "Run" manual kapan saja
+
+jobs:
+  eksekusi_bot:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install Dependencies
+        run: |
+          pip install requests selenium undetected-chromedriver openpyxl
+
+      - name: Jalankan Script Bot
+        env:
+          # Mengambil data rahasia dari GitHub Secrets
+          EMAIL_SCM: ${{ secrets.EMAIL_SCM }}
+          PASS_SCM: ${{ secrets.PASS_SCM }}
+        run: python bot_scm.py
